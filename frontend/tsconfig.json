@@ -23,8 +23,8 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedSideEffectImports": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+  "paths": {
+  "@/*": ["./src/com/aicare/*"]
+}
   }
 }
