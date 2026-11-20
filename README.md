@@ -1,4 +1,4 @@
-# AICare
+# AICARE – PROJETO DE APLICATIVO MOBILE PARA O APOIO AO CUIDADO DE PESSOAS IDOSAS E AO GERENCIAMENTO DE MEDICAMENTOS
 
 ## Sobre o projeto
 
@@ -30,14 +30,14 @@ backend fornece uma API FastAPI e armazena os dados localmente em SQLite.
 Abra o PowerShell e execute:
 
 ```powershell
-git clone https://github.com/vmajl/aicare-mobile.git
-Set-Location aicare-mobile
+git clone https://github.com/rcmafra/AICare.git
+Set-Location AICare
 ```
 
 Crie o ambiente Python do backend e instale suas dependências:
 
 ```powershell
-py -m venv backend\.venv
+python -m venv backend\.venv
 backend\.venv\Scripts\python.exe -m pip install -r backend\src\requirements.txt
 ```
 
