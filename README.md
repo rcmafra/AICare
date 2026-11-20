@@ -31,10 +31,9 @@ Abra o PowerShell e execute:
 
 ```powershell
 git clone https://github.com/rcmafra/AICare.git
-Set-Location AICare
 ```
 
-Crie o ambiente Python do backend e instale suas dependências:
+Dentro do workspace AICare, crie o ambiente Python do backend e instale suas dependências:
 
 ```powershell
 python -m venv backend\.venv
