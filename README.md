@@ -43,9 +43,8 @@ backend\.venv\Scripts\python.exe -m pip install -r backend\src\requirements.txt
 Instale as dependências do frontend:
 
 ```powershell
-Set-Location frontend
+cd .\frontend
 npm ci
-Set-Location ..
 ```
 
 ## Iniciar a aplicação
@@ -53,6 +52,7 @@ Set-Location ..
 Na raiz do projeto, execute:
 
 ```powershell
+cd ..
 .\start-dev.ps1
 ```
 
