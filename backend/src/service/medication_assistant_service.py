@@ -54,15 +54,15 @@ class MedicationAssistantService:
             )
 
         if step == "continuous":
-            if self._positive(answer):
-                updated.update(continuous=True, endDate="")
-                return self._stock_question(answer, updated)
-            if self._negative(answer):
+            if self._negative(answer) or self._has_end_date_intent(answer):
                 updated.update(continuous=False, endDate="")
                 return self._result(
                     "endDate", updated,
                     "Entendi. Então qual será a data de término do tratamento? Informe no formato DD/MM/AAAA.",
                 )
+            if self._positive(answer):
+                updated.update(continuous=True, endDate="")
+                return self._stock_question(answer, updated)
             return self._result(
                 step, updated,
                 'Só para confirmar: o uso será contínuo ou terá uma data para terminar? Responda "contínuo" ou "terá data de término".',
@@ -349,11 +349,21 @@ class MedicationAssistantService:
         ))
 
     @staticmethod
-    def _positive(text: str) -> bool:
+    def _has_end_date_intent(text: str) -> bool:
+        normalized = MedicationAssistantService._normalize(text)
         return bool(re.search(
-            r"\b(sim|s|contínuo|continuo|uso contínuo|uso continuo|indefinido|sempre)\b",
-            text,
-            re.IGNORECASE,
+            r"\b(?:tera(?: uma)? data (?:prevista )?(?:de termino|para terminar)|"
+            r"tem data (?:prevista )?(?:de termino|para terminar)|"
+            r"data (?:prevista )?(?:de termino|para terminar))\b",
+            normalized,
+        ))
+
+    @staticmethod
+    def _positive(text: str) -> bool:
+        normalized = MedicationAssistantService._normalize(text)
+        return bool(re.search(
+            r"\b(sim|s|continuo|uso continuo|indefinido|sempre)\b",
+            normalized,
         ))
 
     @staticmethod

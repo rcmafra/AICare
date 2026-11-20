@@ -3,7 +3,10 @@ from typing import Any
 from fastapi import APIRouter, Depends, status
 
 from dto.schemas import InviteCreateInput
-from security.auth_filter import create_family_access_dependency
+from security.auth_filter import (
+    create_family_access_dependency,
+    create_family_admin_access_dependency,
+)
 from service.auth_service import AuthService
 from service.invite_service import InviteService
 
@@ -14,6 +17,9 @@ def create_invite_router(
 ) -> APIRouter:
     router = APIRouter(tags=["invites"])
     require_family_access = create_family_access_dependency(auth_service)
+    require_family_admin_access = create_family_admin_access_dependency(
+        auth_service
+    )
 
     @router.get("/families/{family_id}/invites")
     def list_invites(
@@ -29,7 +35,7 @@ def create_invite_router(
     def create_invite(
             family_id: str,
             data: InviteCreateInput,
-            _: None = Depends(require_family_access),
+            _: None = Depends(require_family_admin_access),
     ) -> dict[str, Any]:
         return service.create_invite(family_id, data.model_dump())
 
