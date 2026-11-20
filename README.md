@@ -13,6 +13,10 @@ acessíveis entre as pessoas envolvidas no cuidado, ajudando a acompanhar a
 rotina e a manter um histórico. O frontend é feito com React Native e Expo; o
 backend fornece uma API FastAPI e armazena os dados localmente em SQLite.
 
+## Arquitetura
+
+![arquitetura-sistema](arquitetura-sistema.svg)
+
 ## Pré-requisitos
 
 - Windows com PowerShell e Git.
