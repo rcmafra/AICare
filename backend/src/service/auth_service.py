@@ -103,6 +103,7 @@ class AuthService:
         return {
             "id": user["id"],
             "familyId": user["family_id"],
+            "role": user["role"],
         }
 
     def get_session_user(
@@ -133,6 +134,20 @@ class AuthService:
         user = self.authenticate(authorization)
         if user["familyId"] != family_id:
             raise DomainError(403, "Acesso não autorizado a esta família.")
+
+    def require_family_admin_access(
+            self,
+            family_id: str,
+            authorization: str | None,
+    ) -> None:
+        user = self.authenticate(authorization)
+        if user["familyId"] != family_id:
+            raise DomainError(403, "Acesso não autorizado a esta família.")
+        if user["role"] != "Administrador":
+            raise DomainError(
+                403,
+                "Somente membros administradores podem gerar convites.",
+            )
 
     def logout(self, authorization: str | None) -> None:
         self.authenticate(authorization)

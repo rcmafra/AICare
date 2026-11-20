@@ -60,6 +60,9 @@ const isExpired = (date: string) => {
 const normalizeStatus = (status: string) =>
   status.trim().toLowerCase();
 
+const formatRoleLabel = (role: InviteRole) =>
+  role === 'Familiar' ? 'Cuidador' : role;
+
 export default function PeopleScreen() {
   const { user, logout } = useAuth();
 
@@ -74,6 +77,7 @@ export default function PeopleScreen() {
   const [saving, setSaving] = useState(false);
 
   const currentFamilyId = user?.familyId ?? '';
+  const canCreateInvite = user?.role === 'Administrador';
 
   const loadInvites = useCallback(async () => {
     try {
@@ -132,6 +136,14 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
 
   const createInvite = async () => {
     if (saving) return;
+
+    if (!canCreateInvite) {
+      Alert.alert(
+        'Acesso restrito',
+        'Somente membros administradores podem gerar convites.',
+      );
+      return;
+    }
 
     if (!user?.familyId) {
       Alert.alert(
@@ -276,7 +288,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
         <View style={styles.inviteTop}>
           <View style={styles.inviteRole}>
             <Text style={styles.inviteRoleText}>
-              {invite.role}
+              {formatRoleLabel(invite.role)}
             </Text>
           </View>
 
@@ -411,7 +423,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
           </Text>
 
           <Text style={styles.accountRole}>
-            {user?.role ?? 'Familiar'}
+            {formatRoleLabel(user?.role ?? 'Familiar')}
           </Text>
         </View>
 
@@ -425,129 +437,134 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
         </Pressable>
       </View>
 
-      <View style={styles.sectionHeader}>
-        <View>
-          <Text style={styles.sectionTitle}>
-            Familiares e cuidadores
-          </Text>
-
-          <Text style={styles.description}>
-            Convide pessoas para acompanhar os cuidados.
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.statsRow}>
-        <View style={styles.statCard}>
-          <Text style={styles.statNumber}>
-            {pendingInvites.length}
-          </Text>
-
-          <Text style={styles.statLabel}>
-            Convites ativos
-          </Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <Text style={styles.statNumber}>
-            {expiredInvites.length}
-          </Text>
-
-          <Text style={styles.statLabel}>
-            Expirados
-          </Text>
-        </View>
-      </View>
-
-      <Pressable
-        style={styles.createButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.createButtonText}>
-          + Criar convite
-        </Text>
-      </Pressable>
-
-      <View style={styles.infoCard}>
-        <Text style={styles.infoTitle}>
-          Como funcionam os convites?
-        </Text>
-
-        <Text style={styles.infoText}>
-          Gere um código para cada pessoa. O código identifica o tipo de
-          acesso solicitado, fica vinculado à sua família e possui
-          validade de 7 dias.
-        </Text>
-      </View>
-
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          Convites ativos
-        </Text>
-
-        <Text style={styles.countText}>
-          {pendingInvites.length}
-        </Text>
-      </View>
-
-      {loading ? (
-        <ActivityIndicator color={BLUE} />
-      ) : pendingInvites.length > 0 ? (
-        pendingInvites.map(renderInvite)
-      ) : (
-        <View style={styles.emptyCard}>
-          <Text style={styles.emptyTitle}>
-            Nenhum convite ativo
-          </Text>
-
-          <Text style={styles.description}>
-            Os convites criados aparecerão aqui.
-          </Text>
-        </View>
-      )}
-
-      {expiredInvites.length > 0 && (
+      {canCreateInvite ? (
         <>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>
-              Convites expirados
+            <View>
+              <Text style={styles.sectionTitle}>
+                Familiares e cuidadores
+              </Text>
+
+              <Text style={styles.description}>
+                Convide pessoas para acompanhar os cuidados.
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.statsRow}>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>
+                {pendingInvites.length}
+              </Text>
+
+              <Text style={styles.statLabel}>
+                Convites ativos
+              </Text>
+            </View>
+
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>
+                {expiredInvites.length}
+              </Text>
+
+              <Text style={styles.statLabel}>
+                Expirados
+              </Text>
+            </View>
+          </View>
+
+          <Pressable
+            style={styles.createButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.createButtonText}>
+              + Criar convite
+            </Text>
+          </Pressable>
+
+          <View style={styles.infoCard}>
+            <Text style={styles.infoTitle}>
+              Como funcionam os convites?
+            </Text>
+
+            <Text style={styles.infoText}>
+              Gere um código para cada pessoa. O código identifica o tipo de
+              acesso solicitado, fica vinculado à sua família e possui
+              validade de 7 dias.
             </Text>
           </View>
 
-          {expiredInvites.map(renderInvite)}
-        </>
-      )}
-
-      {acceptedInvites.length > 0 && (
-        <>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>
-              Convites utilizados
+              Convites ativos
+            </Text>
+
+            <Text style={styles.countText}>
+              {pendingInvites.length}
             </Text>
           </View>
 
-          {acceptedInvites.map(renderInvite)}
+          {loading ? (
+            <ActivityIndicator color={BLUE} />
+          ) : pendingInvites.length > 0 ? (
+            pendingInvites.map(renderInvite)
+          ) : (
+            <View style={styles.emptyCard}>
+              <Text style={styles.emptyTitle}>
+                Nenhum convite ativo
+              </Text>
+
+              <Text style={styles.description}>
+                Os convites criados aparecerão aqui.
+              </Text>
+            </View>
+          )}
+
+          {expiredInvites.length > 0 && (
+            <>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>
+                  Convites expirados
+                </Text>
+              </View>
+
+              {expiredInvites.map(renderInvite)}
+            </>
+          )}
+
+          {acceptedInvites.length > 0 && (
+            <>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>
+                  Convites utilizados
+                </Text>
+              </View>
+
+              {acceptedInvites.map(renderInvite)}
+            </>
+          )}
+
+          {revokedInvites.length > 0 && (
+            <>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>
+                  Convites revogados
+                </Text>
+              </View>
+
+              {revokedInvites.map(renderInvite)}
+            </>
+          )}
         </>
-      )}
+      ) : null}
 
-      {revokedInvites.length > 0 && (
-        <>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>
-              Convites revogados
-            </Text>
-          </View>
-
-          {revokedInvites.map(renderInvite)}
-        </>
-      )}
-
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
+      {canCreateInvite ? (
+        <Modal
+          visible={modalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setModalVisible(false)}
+        >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>
@@ -591,11 +608,11 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
 
               <View style={styles.roleInfo}>
                 <Text style={styles.roleTitle}>
-                  Familiar
+                  Cuidador
                 </Text>
 
                 <Text style={styles.roleDescription}>
-                  Acompanhamento das informações e dos cuidados.
+                  Apoio aos cuidados do idoso.
                 </Text>
               </View>
             </Pressable>
@@ -620,7 +637,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
                 </Text>
 
                 <Text style={styles.roleDescription}>
-                  Gerenciamento da família e dos acessos autorizados.
+                  Gerenciamento do paciente e dos acessos autorizados.
                 </Text>
               </View>
             </Pressable>
@@ -660,7 +677,8 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
             </Pressable>
           </View>
         </View>
-      </Modal>
+        </Modal>
+      ) : null}
     </ScrollView>
   );
 }

@@ -138,7 +138,7 @@ export default function AssistenteMedicamentosScreen() {
     } catch (error) {
       setMessageInput(answer);
       Alert.alert(
-        'N?o foi poss?vel processar a resposta',
+        'Não foi possível processar a resposta',
         error instanceof Error ? error.message : 'Tente novamente.',
       );
     } finally {
@@ -146,8 +146,8 @@ export default function AssistenteMedicamentosScreen() {
     }
   };
 
-  const sendMessage = () => {
-    const text = messageInput.trim();
+  const sendMessage = (input = messageInput) => {
+    const text = input.trim();
     if (!text || sendingMessage) return;
     setMessageInput('');
     void processChatAnswer(text);
@@ -430,9 +430,15 @@ export default function AssistenteMedicamentosScreen() {
                     style={styles.messageInput}
                     value={messageInput}
                     onChangeText={setMessageInput}
+                    onSubmitEditing={(event) =>
+                      sendMessage(event.nativeEvent.text)
+                    }
                     placeholder="Digite ou dite sua resposta..."
                     placeholderTextColor="#94A3B8"
                     multiline
+                    submitBehavior="submit"
+                    blurOnSubmit={Platform.OS === 'web'}
+                    returnKeyType="send"
                     maxLength={1000}
                   />
 
@@ -442,7 +448,7 @@ export default function AssistenteMedicamentosScreen() {
                       (!messageInput.trim() || sendingMessage) &&
                         styles.sendButtonDisabled,
                     ]}
-                    onPress={sendMessage}
+                    onPress={() => sendMessage()}
                     disabled={!messageInput.trim() || sendingMessage}
                     activeOpacity={0.85}
                   >

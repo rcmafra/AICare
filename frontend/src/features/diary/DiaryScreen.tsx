@@ -370,6 +370,11 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
       return;
     }
 
+    if (Platform.OS === 'web') {
+      await openGallery();
+      return;
+    }
+
     Alert.alert(
       'Adicionar foto',
       'Como deseja adicionar uma foto à publicação?',
