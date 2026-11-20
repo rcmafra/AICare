@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1110" viewBox="0 0 1720 1110" role="img" aria-labelledby="title description">
+  <title id="title">Modelo de dados atual do AICare</title>
+  <desc id="description">Diagrama do modelo de dados do AICare com oito entidades: family_members, sessions, patients, diary_records, invites, medications, dose_records e inventory_movements. Mostra a chave estrangeira entre sessões e membros e as associações lógicas por família.</desc>
+  <defs>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; }
+      .page { fill: #f5f7fa; }
+      .heading { fill: #172b3a; font-size: 32px; font-weight: 650; }
+      .subheading { fill: #607181; font-size: 15px; }
+      .card { fill: #fff; stroke: #d3dce4; stroke-width: 1.5; }
+      .card-head { fill: #eaf1f6; }
+      .card-name { fill: #244b68; font-size: 19px; font-weight: 650; }
+      .table-tag { fill: #788896; font-size: 11px; letter-spacing: 1.1px; }
+      .field { fill: #314252; font-size: 14px; }
+      .note { fill: #647585; font-size: 13px; }
+      .key { fill: #52718a; font-size: 12px; font-weight: 600; }
+      .fk-line { fill: none; stroke: #577b96; stroke-width: 2.2; }
+      .logical-line { fill: none; stroke: #8b9ba8; stroke-width: 1.8; stroke-dasharray: 6 6; }
+      .line-label { fill: #526878; font-size: 12px; }
+      .scope-box { fill: #edf2f5; stroke: #cbd6de; stroke-width: 1.3; }
+      .scope-title { fill: #334e60; font-size: 14px; font-weight: 650; }
+      .scope-copy { fill: #657887; font-size: 12px; }
+      .footer { fill: #6b7b88; font-size: 12px; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="#577b96" stroke-width="1.4"/>
+    </marker>
+    <marker id="logical-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="#8b9ba8" stroke-width="1.3"/>
+    </marker>
+  </defs>
+
+  <rect class="page" width="1720" height="1110"/>
+  <text class="heading" x="76" y="70">Persistência do AICare</text>
+  <text class="subheading" x="78" y="108">Estrutura atual de dados · entidades e associações usadas pela API</text>
+  <text class="table-tag" x="1536" y="83">MODELO DE DADOS</text>
+
+  <!-- Associações: a linha contínua representa a FK declarada no modelo. -->
+  <path class="fk-line" d="M565 289 H625" marker-end="url(#arrow)"/>
+  <text class="line-label" x="574" y="277">1 : 0..*</text>
+
+  <!-- Referências armazenadas nos payloads, sem constraints de FK. -->
+  <path class="logical-line" d="M1400 704 V774 H868 V800" marker-end="url(#logical-arrow)"/>
+  <path class="logical-line" d="M1450 704 V800" marker-end="url(#logical-arrow)"/>
+  <rect x="1015" y="755" width="204" height="24" rx="5" fill="#f5f7fa"/>
+  <text class="line-label" x="1027" y="772">medicineId no payload</text>
+
+  <!-- Membros da família -->
+  <g>
+    <rect class="card" x="76" y="158" width="489" height="268" rx="9"/>
+    <path class="card-head" d="M85 158 H556 Q565 158 565 167 V210 H76 V167 Q76 158 85 158 Z"/>
+    <line x1="76" y1="210" x2="565" y2="210" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="98" y="181">ENTIDADE</text>
+    <text class="card-name" x="98" y="202">family_members</text>
+    <text class="field" x="98" y="239">id: TEXT <tspan class="key">PK</tspan></text>
+    <text class="field" x="98" y="266">family_id: TEXT</text>
+    <text class="field" x="98" y="293">name: TEXT</text>
+    <text class="field" x="98" y="320">email: TEXT <tspan class="key">UNIQUE</tspan></text>
+    <text class="field" x="98" y="347">password_hash: TEXT</text>
+    <text class="field" x="98" y="374">role: TEXT · invite_code: TEXT (opcional)</text>
+    <text class="field" x="98" y="401">created_at: TEXT</text>
+  </g>
+
+  <!-- Sessões de autenticação -->
+  <g>
+    <rect class="card" x="625" y="158" width="489" height="166" rx="9"/>
+    <path class="card-head" d="M634 158 H1105 Q1114 158 1114 167 V210 H625 V167 Q625 158 634 158 Z"/>
+    <line x1="625" y1="210" x2="1114" y2="210" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="647" y="181">ENTIDADE</text>
+    <text class="card-name" x="647" y="202">sessions</text>
+    <text class="field" x="647" y="239">token_hash: TEXT <tspan class="key">PK</tspan></text>
+    <text class="field" x="647" y="266">user_id: TEXT <tspan class="key">FK → family_members.id</tspan></text>
+    <text class="field" x="647" y="293">expires_at: TEXT</text>
+  </g>
+
+  <!-- Perfil do paciente -->
+  <g>
+    <rect class="card" x="1174" y="158" width="470" height="166" rx="9"/>
+    <path class="card-head" d="M1183 158 H1635 Q1644 158 1644 167 V210 H1174 V167 Q1174 158 1183 158 Z"/>
+    <line x1="1174" y1="210" x2="1644" y2="210" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="1196" y="181">ENTIDADE</text>
+    <text class="card-name" x="1196" y="202">patients</text>
+    <text class="field" x="1196" y="239">family_id: TEXT <tspan class="key">PK</tspan></text>
+    <text class="field" x="1196" y="266">payload: TEXT (JSON)</text>
+    <text class="note" x="1196" y="295">Perfil e dados do paciente da família</text>
+  </g>
+
+  <!-- Convites -->
+  <g>
+    <rect class="card" x="76" y="478" width="489" height="193" rx="9"/>
+    <path class="card-head" d="M85 478 H556 Q565 478 565 487 V530 H76 V487 Q76 478 85 478 Z"/>
+    <line x1="76" y1="530" x2="565" y2="530" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="98" y="501">ENTIDADE</text>
+    <text class="card-name" x="98" y="522">invites</text>
+    <text class="field" x="98" y="559">family_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="98" y="586">invite_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="98" y="613">code: TEXT <tspan class="key">UNIQUE</tspan></text>
+    <text class="field" x="98" y="640">payload: TEXT (JSON)</text>
+  </g>
+
+  <!-- Diário -->
+  <g>
+    <rect class="card" x="625" y="478" width="489" height="193" rx="9"/>
+    <path class="card-head" d="M634 478 H1105 Q1114 478 1114 487 V530 H625 V487 Q625 478 634 478 Z"/>
+    <line x1="625" y1="530" x2="1114" y2="530" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="647" y="501">ENTIDADE</text>
+    <text class="card-name" x="647" y="522">diary_records</text>
+    <text class="field" x="647" y="559">family_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="647" y="586">record_date: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="647" y="613">payload: TEXT (JSON)</text>
+    <text class="note" x="647" y="642">Observação, data, fuso horário e foto opcional</text>
+  </g>
+
+  <!-- Medicamentos -->
+  <g>
+    <rect class="card" x="1174" y="478" width="470" height="226" rx="9"/>
+    <path class="card-head" d="M1183 478 H1635 Q1644 478 1644 487 V530 H1174 V487 Q1174 478 1183 478 Z"/>
+    <line x1="1174" y1="530" x2="1644" y2="530" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="1196" y="501">ENTIDADE</text>
+    <text class="card-name" x="1196" y="522">medications</text>
+    <text class="field" x="1196" y="559">family_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="1196" y="586">medication_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="1196" y="613">payload: TEXT (JSON)</text>
+    <text class="note" x="1196" y="642">Cadastro, posologia, estoque e estado</text>
+    <text class="note" x="1196" y="667">do medicamento ficam no payload</text>
+  </g>
+
+  <!-- Registros de doses -->
+  <g>
+    <rect class="card" x="625" y="800" width="489" height="166" rx="9"/>
+    <path class="card-head" d="M634 800 H1105 Q1114 800 1114 809 V852 H625 V809 Q625 800 634 800 Z"/>
+    <line x1="625" y1="852" x2="1114" y2="852" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="647" y="823">ENTIDADE</text>
+    <text class="card-name" x="647" y="844">dose_records</text>
+    <text class="field" x="647" y="881">family_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="647" y="908">record_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="647" y="935">payload: TEXT (JSON)</text>
+  </g>
+
+  <!-- Movimentações de estoque -->
+  <g>
+    <rect class="card" x="1174" y="800" width="470" height="166" rx="9"/>
+    <path class="card-head" d="M1183 800 H1635 Q1644 800 1644 809 V852 H1174 V809 Q1174 800 1183 800 Z"/>
+    <line x1="1174" y1="852" x2="1644" y2="852" stroke="#d3dce4" stroke-width="1.5"/>
+    <text class="table-tag" x="1196" y="823">ENTIDADE</text>
+    <text class="card-name" x="1196" y="844">inventory_movements</text>
+    <text class="field" x="1196" y="881">family_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="1196" y="908">record_id: TEXT <tspan class="key">PK · composta</tspan></text>
+    <text class="field" x="1196" y="935">payload: TEXT (JSON)</text>
+  </g>
+
+  <!-- Escopo compartilhado entre os registros da aplicação -->
+  <g>
+    <rect class="scope-box" x="76" y="760" width="489" height="126" rx="9"/>
+    <text class="scope-title" x="98" y="790">Escopo da família</text>
+    <text class="scope-copy" x="98" y="817">family_id organiza os dados de cada família</text>
+    <text class="scope-copy" x="98" y="840">e permite compartilhar o acompanhamento</text>
+    <text class="scope-copy" x="98" y="863">entre seus membros.</text>
+  </g>
+
+  <line x1="76" y1="1022" x2="1644" y2="1022" stroke="#d9e0e6" stroke-width="1"/>
+  <text class="footer" x="76" y="1052">PK: chave primária · FK: chave estrangeira · payload: conteúdo serializado em JSON</text>
+  <text class="footer" x="76" y="1076">Somente sessions.user_id possui FK declarada. As demais associações por family_id e medicineId são aplicadas pela API.</text>
+</svg>
