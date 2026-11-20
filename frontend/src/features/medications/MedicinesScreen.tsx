@@ -27,6 +27,7 @@ import {
 import { useMedications } from './MedicationContext';
 import MedicationForm from './MedicationForm';
 import { usePatient } from '../patients/PatientContext';
+import { useTheme, useThemeStyles } from '../theme/ThemeContext';
 
 import type {
   Medicine,
@@ -73,6 +74,8 @@ function movementLabel(type: InventoryMovement['type']) {
 }
 
 export default function MedicinesScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const router = useRouter();
 
   const {
@@ -307,7 +310,7 @@ export default function MedicinesScreen() {
               onPress={closeForm}
               style={styles.closeButton}
             >
-              <X size={20} color={COLORS.muted} />
+              <X size={20} color={colors.muted} />
             </Pressable>
           </View>
 
@@ -347,7 +350,7 @@ export default function MedicinesScreen() {
             value={search}
             onChangeText={setSearch}
             placeholder="Buscar medicamento..."
-            placeholderTextColor={COLORS.muted}
+            placeholderTextColor={colors.muted}
             style={styles.search}
           />
 
@@ -497,7 +500,7 @@ export default function MedicinesScreen() {
                           })
                         }
                       >
-                        <History size={17} color={COLORS.dark} />
+                        <History size={17} color={colors.text} />
                         <Text style={styles.historyButtonText}>
                           Histórico
                         </Text>
@@ -574,7 +577,7 @@ export default function MedicinesScreen() {
                 style={styles.closeButton}
                 onPress={() => setActivePanel(null)}
               >
-                <X size={21} color={COLORS.muted} />
+                <X size={21} color={colors.muted} />
               </Pressable>
             </View>
 
@@ -598,7 +601,7 @@ export default function MedicinesScreen() {
                   value={replenishQuantity}
                   onChangeText={setReplenishQuantity}
                   placeholder="Ex.: 30"
-                  placeholderTextColor={COLORS.muted}
+                  placeholderTextColor={colors.muted}
                   keyboardType="decimal-pad"
                   style={styles.input}
                 />
@@ -615,7 +618,7 @@ export default function MedicinesScreen() {
                   value={replenishDescription}
                   onChangeText={setReplenishDescription}
                   placeholder="Ex.: Compra realizada em 02/11"
-                  placeholderTextColor={COLORS.muted}
+                  placeholderTextColor={colors.muted}
                   style={styles.input}
                 />
 
@@ -731,7 +734,7 @@ export default function MedicinesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     gap: 20,
   },

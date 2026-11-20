@@ -13,6 +13,7 @@ import {
 import { Alert } from '../../utils/platformAlert';
 import { useRouter } from 'expo-router';
 import { usePatient } from './PatientContext';
+import { useTheme, useThemeStyles } from '../theme/ThemeContext';
 
 const BLUE = '#50A9C3';
 const DARK = '#102F40';
@@ -20,6 +21,8 @@ const MUTED = '#6D8794';
 const BORDER = '#D8E3E8';
 
 export default function PatientFormScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const router = useRouter();
   const { patient, savePatient } = usePatient();
 
@@ -141,7 +144,7 @@ export default function PatientFormScreen() {
             value={name}
             onChangeText={setName}
             placeholder="Nome do paciente"
-            placeholderTextColor="#9AABB3"
+            placeholderTextColor={colors.muted}
             style={styles.input}
             autoCapitalize="words"
             returnKeyType="next"
@@ -153,7 +156,7 @@ export default function PatientFormScreen() {
             value={birthDate}
             onChangeText={(value) => setBirthDate(formatBirthDate(value))}
             placeholder="DD/MM/AAAA"
-            placeholderTextColor="#9AABB3"
+            placeholderTextColor={colors.muted}
             style={styles.input}
             keyboardType="number-pad"
             maxLength={10}
@@ -165,7 +168,7 @@ export default function PatientFormScreen() {
             value={relationship}
             onChangeText={setRelationship}
             placeholder="Ex.: mãe, pai, avó, cônjuge..."
-            placeholderTextColor="#9AABB3"
+            placeholderTextColor={colors.muted}
             style={styles.input}
             autoCapitalize="sentences"
           />
@@ -176,7 +179,7 @@ export default function PatientFormScreen() {
             value={notes}
             onChangeText={setNotes}
             placeholder="Informações relevantes sobre o paciente..."
-            placeholderTextColor="#9AABB3"
+            placeholderTextColor={colors.muted}
             style={[styles.input, styles.textArea]}
             multiline
             textAlignVertical="top"
@@ -210,7 +213,7 @@ export default function PatientFormScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#F4FAFC',

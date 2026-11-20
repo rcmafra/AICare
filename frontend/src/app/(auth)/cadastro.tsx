@@ -14,6 +14,7 @@ import {
 import { Alert } from '../../utils/platformAlert';
 import { Link, router } from 'expo-router';
 import { useAuth } from '../../features/auth/AuthContext';
+import { useTheme, useThemeStyles } from '../../features/theme/ThemeContext';
 
 const BLUE = '#50A9C3';
 const DARK = '#102F40';
@@ -25,6 +26,8 @@ const PALE_BLUE = '#E8F6FA';
 type RegistrationMode = 'new' | 'invite';
 
 export default function CadastroScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const { register } = useAuth();
 
   const [mode, setMode] = useState<RegistrationMode | null>(null);
@@ -235,7 +238,7 @@ export default function CadastroScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Seu nome"
-                placeholderTextColor="#9AAEB7"
+                placeholderTextColor={colors.muted}
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -247,7 +250,7 @@ export default function CadastroScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="seuemail@exemplo.com"
-                placeholderTextColor="#9AAEB7"
+                placeholderTextColor={colors.muted}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -261,7 +264,7 @@ export default function CadastroScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Mínimo de 6 caracteres"
-                placeholderTextColor="#9AAEB7"
+                placeholderTextColor={colors.muted}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -273,7 +276,7 @@ export default function CadastroScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="Digite a senha novamente"
-                placeholderTextColor="#9AAEB7"
+                placeholderTextColor={colors.muted}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
@@ -287,7 +290,7 @@ export default function CadastroScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="Ex.: AIC-ABC123"
-                    placeholderTextColor="#9AAEB7"
+                    placeholderTextColor={colors.muted}
                     value={inviteCode}
                     onChangeText={setInviteCode}
                     autoCapitalize="characters"
@@ -369,7 +372,7 @@ export default function CadastroScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: BACKGROUND,

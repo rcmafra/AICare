@@ -20,6 +20,7 @@ import { useMedications } from '../medications/MedicationContext';
 import { usePatient } from '../patients/PatientContext';
 import { useAuth } from '../auth/AuthContext';
 import { setPendingDiaryPhoto } from '../diary/diaryStorage';
+import { useTheme, useThemeStyles } from '../theme/ThemeContext';
 
 const BLUE = '#50A9C3';
 const DARK = '#102F40';
@@ -36,6 +37,8 @@ function getTodayKey() {
 }
 
 export default function HomeScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const router = useRouter();
   const [isPhotoActionRunning, setIsPhotoActionRunning] = useState(false);
   const [hasTodayPhoto, setHasTodayPhoto] = useState(false);
@@ -307,7 +310,7 @@ const refreshTodayPhotoStatus = useCallback(async () => {
           onPress={() => router.push('/cadastro-paciente')}
           style={styles.registerPatientButton}
         >
-          <Plus size={18} color={DARK} />
+          <Plus size={18} color={colors.text} />
           <Text style={styles.registerPatientText}>
             Cadastrar paciente
           </Text>
@@ -503,7 +506,7 @@ const refreshTodayPhotoStatus = useCallback(async () => {
                   </View>
 
                   <View style={styles.schedule}>
-                    <Clock size={16} color={MUTED} />
+                    <Clock size={16} color={colors.muted} />
 
                     <View style={styles.scheduleInfo}>
                       <Text style={styles.scheduleTitle}>
@@ -529,7 +532,7 @@ const refreshTodayPhotoStatus = useCallback(async () => {
                         void handleUndo(dose.id);
                       }}
                     >
-                      <RotateCcw size={16} color={DARK} />
+                      <RotateCcw size={16} color={colors.text} />
 
                       <Text style={styles.undoButtonText}>
                         Desfazer administração
@@ -563,7 +566,7 @@ const refreshTodayPhotoStatus = useCallback(async () => {
         style={styles.newMedicineButton}
         onPress={goToMedicines}
       >
-        <Plus size={18} color={DARK} />
+        <Plus size={18} color={colors.text} />
 
         <Text style={styles.newMedicineText}>
           Novo medicamento
@@ -573,7 +576,7 @@ const refreshTodayPhotoStatus = useCallback(async () => {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     gap: 20,
   },

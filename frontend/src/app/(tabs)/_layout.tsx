@@ -5,19 +5,21 @@ import {
   Pill,
   Users,
 } from 'lucide-react-native';
-
-const COLORS = {
-  blue: '#50A9C3',
-  muted: '#6D8794',
-};
+import { useTheme } from '../../features/theme/ThemeContext';
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.blue,
-        tabBarInactiveTintColor: COLORS.muted,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.muted,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+        },
       }}
     >
       <Tabs.Screen

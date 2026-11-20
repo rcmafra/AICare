@@ -1,7 +1,10 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import DiaryScreen from '../../features/diary/DiaryScreen';
+import { useThemeStyles } from '../../features/theme/ThemeContext';
 
 export default function DiaryRoute() {
+  const styles = useThemeStyles(baseStyles);
+
   return (
     <ScrollView
       style={styles.container}
@@ -16,7 +19,7 @@ export default function DiaryRoute() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F4FAFC',
