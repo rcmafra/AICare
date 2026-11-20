@@ -11,6 +11,7 @@ import {
 import { Alert } from '../../utils/platformAlert';
 
 import type { Medicine, MedicineDraft } from '../../types/medication';
+import { useTheme, useThemeStyles } from '../theme/ThemeContext';
 
 type Props = {
   initialData?: Medicine | null;
@@ -57,6 +58,9 @@ function Field({
   placeholder,
   keyboardType = 'default',
 }: FieldProps) {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
+
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{label}</Text>
@@ -65,7 +69,7 @@ function Field({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={COLORS.muted}
+        placeholderTextColor={colors.muted}
         keyboardType={keyboardType}
         style={styles.input}
       />
@@ -78,6 +82,8 @@ export default function MedicationForm({
   onSave,
   onCancel,
 }: Props) {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const [draft, setDraft] = useState<MedicineDraft>(() => {
     if (!initialData) return emptyDraft;
     const { id, active, administered, ...formData } = initialData;
@@ -249,7 +255,7 @@ export default function MedicationForm({
         <Switch
           value={draft.continuous}
           onValueChange={(value) => update('continuous', value)}
-          trackColor={{ false: COLORS.border, true: COLORS.blue }}
+          trackColor={{ false: colors.border, true: colors.primary }}
         />
       </View>
 
@@ -347,7 +353,7 @@ export default function MedicationForm({
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     padding: 18,

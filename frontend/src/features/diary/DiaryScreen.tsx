@@ -47,6 +47,7 @@ import {
 import { useAuth } from '../auth/AuthContext';
 import { usePatient } from '../patients/PatientContext';
 import { takePendingDiaryPhoto } from './diaryStorage';
+import { useTheme, useThemeStyles } from '../theme/ThemeContext';
 
 const BLUE = '#50A9C3';
 const DARK = '#102F40';
@@ -131,6 +132,8 @@ async function getApiDiaryRecord(record: DiaryRecord): Promise<ApiDiaryRecord> {
 }
 
 export default function DiaryScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const today = new Date();
 
   const [records, setRecords] = useState<DiaryRecord[]>([]);
@@ -625,7 +628,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
               onPress={() => changeMonth(-1)}
               style={styles.monthArrow}
             >
-              <ChevronLeft size={22} color={DARK} />
+              <ChevronLeft size={22} color={colors.text} />
             </Pressable>
 
             <View style={styles.monthTitleContainer}>
@@ -640,7 +643,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
               onPress={() => changeMonth(1)}
               style={styles.monthArrow}
             >
-              <ChevronRight size={22} color={DARK} />
+              <ChevronRight size={22} color={colors.text} />
             </Pressable>
           </View>
 
@@ -838,7 +841,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
               <TextInput
                 style={styles.composerInput}
                 placeholder="O que aconteceu hoje? Escreva uma observação..."
-                placeholderTextColor="#9AABB3"
+                placeholderTextColor={colors.muted}
                 multiline
                 value={observation}
                 editable={!saving}
@@ -989,7 +992,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   screen: {
     flex: 1,
   },

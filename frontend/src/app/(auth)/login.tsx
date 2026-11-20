@@ -14,6 +14,7 @@ import {
 import { Alert } from '../../utils/platformAlert';
 import { Link, router } from 'expo-router';
 import { useAuth } from '../../features/auth/AuthContext';
+import { useTheme, useThemeStyles } from '../../features/theme/ThemeContext';
 
 const BLUE = '#50A9C3';
 const DARK = '#102F40';
@@ -22,6 +23,8 @@ const BORDER = '#D8E3E8';
 const BACKGROUND = '#F5FAFC';
 
 export default function LoginScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const { login } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -78,7 +81,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="seuemail@exemplo.com"
-            placeholderTextColor="#9AAEB7"
+            placeholderTextColor={colors.muted}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -90,7 +93,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="Digite sua senha"
-            placeholderTextColor="#9AAEB7"
+            placeholderTextColor={colors.muted}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -131,7 +134,7 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: BACKGROUND,

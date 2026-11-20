@@ -15,6 +15,7 @@ import { Alert } from '../utils/platformAlert';
 
 import { useMedications } from '../features/medications/MedicationContext';
 import { useAuth } from '../features/auth/AuthContext';
+import { useTheme, useThemeStyles } from '../features/theme/ThemeContext';
 import type { MedicineDraft } from '../types/medication';
 import {
   processMedicationAssistantAnswer,
@@ -89,6 +90,8 @@ function addDaysToConversation(
 }
 
 export default function AssistenteMedicamentosScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const { colors } = useTheme();
   const { addMedicine } = useMedications();
   const { user } = useAuth();
 
@@ -317,7 +320,7 @@ export default function AssistenteMedicamentosScreen() {
         value={String(draft[field])}
         onChangeText={(value) => updateField(field, value as never)}
         placeholder={placeholder}
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor={colors.muted}
         keyboardType={options?.keyboardType ?? 'default'}
         multiline={options?.multiline}
         textAlignVertical={options?.multiline ? 'top' : 'center'}
@@ -434,7 +437,7 @@ export default function AssistenteMedicamentosScreen() {
                       sendMessage(event.nativeEvent.text)
                     }
                     placeholder="Digite ou dite sua resposta..."
-                    placeholderTextColor="#94A3B8"
+                    placeholderTextColor={colors.muted}
                     multiline
                     submitBehavior="submit"
                     blurOnSubmit={Platform.OS === 'web'}
@@ -542,8 +545,8 @@ export default function AssistenteMedicamentosScreen() {
                   }
                 }}
                 trackColor={{
-                  false: '#CBD5E1',
-                  true: '#8CCBC1',
+                  false: colors.border,
+                  true: colors.primary,
                 }}
                 thumbColor={
                   draft.continuous ? '#238477' : '#F8FAFC'
@@ -733,7 +736,7 @@ export default function AssistenteMedicamentosScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#F5F8F8',

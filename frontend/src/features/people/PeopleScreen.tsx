@@ -17,6 +17,11 @@ import { useAuth } from '../auth/AuthContext';
 import { router } from 'expo-router';
 import { usePatient } from '../patients/PatientContext';
 import {
+  useTheme,
+  useThemeStyles,
+  type ThemePreference,
+} from '../theme/ThemeContext';
+import {
   createInviteOnApi,
   fetchInvites,
   updateInviteOnApi,
@@ -64,6 +69,13 @@ const formatRoleLabel = (role: InviteRole) =>
   role === 'Familiar' ? 'Cuidador' : role;
 
 export default function PeopleScreen() {
+  const styles = useThemeStyles(baseStyles);
+  const {
+    colors,
+    themePreference,
+    themePreferenceLoaded,
+    setThemePreference,
+  } = useTheme();
   const { user, logout } = useAuth();
 
   // Mantém todos os convites armazenados, mas exibe apenas
@@ -75,9 +87,32 @@ export default function PeopleScreen() {
     useState<InviteRole>('Familiar');
   const [inviteName, setInviteName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [savingThemePreference, setSavingThemePreference] = useState(false);
 
   const currentFamilyId = user?.familyId ?? '';
   const canCreateInvite = user?.role === 'Administrador';
+
+  const chooseThemePreference = async (preference: ThemePreference) => {
+    if (
+      savingThemePreference ||
+      !themePreferenceLoaded ||
+      preference === themePreference
+    ) {
+      return;
+    }
+
+    setSavingThemePreference(true);
+    try {
+      await setThemePreference(preference);
+    } catch {
+      Alert.alert(
+        'Erro',
+        'Não foi possível salvar a preferência de aparência.',
+      );
+    } finally {
+      setSavingThemePreference(false);
+    }
+  };
 
   const loadInvites = useCallback(async () => {
     try {
@@ -396,17 +431,66 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
   <Pressable
     onPress={() => router.push('/cadastro-paciente')}
     style={{
-      backgroundColor: PALE_BLUE,
+      backgroundColor: colors.primarySurface,
       paddingHorizontal: 12,
       paddingVertical: 10,
       borderRadius: 8,
     }}
   >
-    <Text style={{ color: DARK, fontSize: 11, fontWeight: '800' }}>
+    <Text style={{ color: colors.text, fontSize: 11, fontWeight: '800' }}>
       {patient ? 'Editar' : 'Cadastrar'}
     </Text>
   </Pressable>
 </View>
+
+      <View style={styles.appearanceCard}>
+        <Text style={styles.appearanceTitle}>Aparência</Text>
+        <Text style={styles.description}>
+          Por padrão, o app acompanha o tema do dispositivo.
+        </Text>
+
+        <View style={styles.themeOptions}>
+          {([
+            ['system', 'Sistema'],
+            ['light', 'Claro'],
+            ['dark', 'Escuro'],
+          ] as const).map(([preference, label]) => {
+            const selected = themePreference === preference;
+
+            return (
+              <Pressable
+                key={preference}
+                accessibilityRole="radio"
+                accessibilityState={{ checked: selected }}
+                disabled={!themePreferenceLoaded || savingThemePreference}
+                onPress={() => void chooseThemePreference(preference)}
+                style={[
+                  styles.themeOption,
+                  {
+                    backgroundColor: selected
+                      ? colors.primary
+                      : colors.surface,
+                    borderColor: selected ? colors.primary : colors.border,
+                    opacity:
+                      !themePreferenceLoaded || savingThemePreference
+                        ? 0.6
+                        : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.themeOptionText,
+                    { color: selected ? '#FFFFFF' : colors.text },
+                  ]}
+                >
+                  {label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
 
       <View style={styles.accountCard}>
         <View style={styles.accountInfo}>
@@ -582,7 +666,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
             <TextInput
               style={styles.input}
               placeholder="Ex.: Ana"
-              placeholderTextColor={MUTED}
+              placeholderTextColor={colors.muted}
               value={inviteName}
               onChangeText={setInviteName}
               maxLength={50}
@@ -683,7 +767,7 @@ const patientInitial = patient?.name?.trim().charAt(0).toUpperCase() || '?';
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -717,6 +801,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+  },
+  appearanceCard: {
+    backgroundColor: '#FFFFFF',
+    borderColor: BORDER,
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 16,
+    gap: 10,
+  },
+  appearanceTitle: {
+    color: DARK,
+    fontSize: 16,
+    fontWeight: '800',
+  },
+  themeOptions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  themeOption: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 9,
+    paddingVertical: 11,
+    alignItems: 'center',
+  },
+  themeOptionText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   personAvatar: {
     width: 46,

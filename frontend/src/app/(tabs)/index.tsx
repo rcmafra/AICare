@@ -1,9 +1,10 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import HomeScreen from '../../features/home/HomeScreen';
-
-const BG = '#F4FAFC';
+import { useThemeStyles } from '../../features/theme/ThemeContext';
 
 export default function HomeRoute() {
+  const styles = useThemeStyles(baseStyles);
+
   return (
     <ScrollView
       style={styles.container}
@@ -18,10 +19,10 @@ export default function HomeRoute() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BG,
+    backgroundColor: '#F4FAFC',
   },
   content: {
     paddingHorizontal: 24,
